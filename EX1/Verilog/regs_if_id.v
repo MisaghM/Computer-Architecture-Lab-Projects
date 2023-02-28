@@ -1,0 +1,3 @@
+module RegsIfId();
+
+endmodule

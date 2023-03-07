@@ -1,6 +1,6 @@
 module RegisterFile #(
     parameter WordLen = 32,
-    parameter WordCount = 16
+    parameter WordCount = 15
 )(
     input clk, rst,
     input [Bits-1:0] readRegister1, readRegister2, writeRegister,

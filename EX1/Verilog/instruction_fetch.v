@@ -1,7 +1,7 @@
 module InstructionFetch(
     input clk, rst,
     input branchTaken, freeze,
-    input [31:0] branchAddress,
+    input [31:0] branchAddr,
     output [31:0] pc, instruction
 );
     wire [31:0] pcRegIn, pcRegOut, pcAdderOut;
@@ -23,7 +23,7 @@ module InstructionFetch(
 
     Mux2To1 #(32) pcMux(
         .a(pcAdderOut),
-        .b(branchAddress),
+        .b(branchAddr),
         .sel(branchTaken),
         .out(pcRegIn)
     );

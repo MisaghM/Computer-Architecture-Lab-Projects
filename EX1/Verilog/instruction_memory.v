@@ -9,7 +9,7 @@ module InstructionMemory #(
     wire [31:0] adr;
     assign adr = {pc[31:2], 2'b00}; // Align address to the word boundary
 
-    initial $readmemb("instructions.mem", instMem);
+    initial $readmemb("Files/instructions.mem", instMem);
 
     assign inst = {instMem[adr + 3], instMem[adr + 2], instMem[adr + 1], instMem[adr]};
 endmodule

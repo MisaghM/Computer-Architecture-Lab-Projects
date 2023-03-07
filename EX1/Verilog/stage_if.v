@@ -22,8 +22,8 @@ module StageIf(
     );
 
     Mux2To1 #(32) pcMux(
-        .a(pcAdderOut),
-        .b(branchAddr),
+        .a0(pcAdderOut),
+        .a1(branchAddr),
         .sel(branchTaken),
         .out(pcRegIn)
     );
@@ -32,4 +32,6 @@ module StageIf(
         .pc(pcRegOut),
         .inst(instruction)
     );
+
+    assign pc = pcAdderOut;
 endmodule

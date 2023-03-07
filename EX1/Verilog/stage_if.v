@@ -1,4 +1,4 @@
-module InstructionFetch(
+module StageIf(
     input clk, rst,
     input branchTaken, freeze,
     input [31:0] branchAddr,

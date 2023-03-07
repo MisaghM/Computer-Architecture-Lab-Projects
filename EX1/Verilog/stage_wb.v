@@ -1,4 +1,4 @@
-module Execution(
+module StageWb(
     input clk, rst,
     input [31:0] pcIn,
     output [31:0] pcOut

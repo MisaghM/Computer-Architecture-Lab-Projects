@@ -16,6 +16,11 @@ module RegisterFile #(
 
     integer i;
 
+    initial begin
+        for (i = 0; i < WordCount; i = i + 1)
+            regFile[i] <= i;
+    end
+
     always @(negedge clk or posedge rst) begin
         if (rst)
             for (i = 0; i < WordCount; i = i + 1)

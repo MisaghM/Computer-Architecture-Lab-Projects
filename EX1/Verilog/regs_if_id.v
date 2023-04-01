@@ -5,8 +5,14 @@ module RegsIfId(
     output [31:0] pcOut, instructionOut
 );
     Register #(32) pcReg(
-        .clk(clk), .rst(rst | flush),
-        .in(pcIn), .ld(~freeze), .clr(1'b0),
+        .clk(clk), .rst(rst),
+        .in(pcIn), .ld(~freeze), .clr(flush),
         .out(pcOut)
+    );
+
+    Register #(32) instReg(
+        .clk(clk), .rst(rst),
+        .in(instructionIn), .ld(~freeze), .clr(flush),
+        .out(instructionOut)
     );
 endmodule

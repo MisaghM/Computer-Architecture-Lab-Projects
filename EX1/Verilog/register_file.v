@@ -3,12 +3,11 @@ module RegisterFile #(
     parameter WordCount = 15
 )(
     input clk, rst,
-    input [Bits-1:0] readRegister1, readRegister2, writeRegister,
+    input [$clog2(WordCount)-1:0] readRegister1, readRegister2, writeRegister,
     input [WordLen-1:0] writeData,
     input regWrite, sclr,
     output [WordLen-1:0] readData1, readData2
 );
-    localparam Bits = $clog2(WordCount);
     reg [WordLen-1:0] regFile [0:WordCount-1];
 
     assign readData1 = regFile[readRegister1];

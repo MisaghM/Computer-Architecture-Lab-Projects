@@ -1,11 +1,16 @@
 module RegsMemWb(
     input clk, rst,
-    input [31:0] pcIn,
-    output [31:0] pcOut
+    input wbEnIn, memREnIn,
+    input [31:0] aluRes, memData,
+    input [3:0] destIn,
+    output wbEnOut, memREnOut,
+    output [31:0] wbData,
+    output [3:0] destOut
 );
-    Register #(32) pcReg(
-        .clk(clk), .rst(rst),
-        .in(pcIn), .ld(1'b1), .clr(1'b0),
-        .out(pcOut)
+    Mux2To1 #(32) wbMux(
+        .a0(aluRes),
+        .a1(memData),
+        .sel(memREnIn),
+        .out(wbData)
     );
 endmodule

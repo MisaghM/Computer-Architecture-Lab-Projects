@@ -9,7 +9,6 @@ module StageMem(
 );
     assign wbEnOut = wbEnIn;
     assign memREnOut = memREnIn;
-    assign memWEnOut = memWEnIn;
     assign aluResOut = aluResIn;
     assign destOut = destIn;
 

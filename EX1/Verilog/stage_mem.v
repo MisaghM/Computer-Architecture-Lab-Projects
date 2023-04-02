@@ -12,7 +12,7 @@ module StageMem(
     assign aluResOut = aluResIn;
     assign destOut = destIn;
 
-    DataMemory #(.WordCount($pow(2, 32)), .WordLength(8)) mem(
+    DataMemory #(.WordCount($rtoi($pow(2, 32))), .WordLength(8), .BITS(32)) mem(
         .clk(clk),
         .rst(rst),
         .memAdr(aluResIn),

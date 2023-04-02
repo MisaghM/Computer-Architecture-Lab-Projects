@@ -1,14 +1,14 @@
 module DataMemory #(
     parameter WordLength = 8,
-    parameter WordCount = $pow(2, 32)
+    parameter WordCount = $rtoi($pow(2, 32)),
+    parameter BITS = $clog2(WordCount)
 )(
     input clk, rst,
     input [BITS-1:0] memAdr, writeData,
     input memRead, memWrite,
     output reg [BITS-1:0] readData
 );
-    localparam BITS = $clog2(WordCount);
-    localparam RealWordCount = $pow(2, 12); // A 4KB memory is used instead of a 4GB one
+    localparam RealWordCount = $rtoi($pow(2, 12)); // A 4KB memory is used instead of a 4GB one
 
     reg [WordLength-1:0] dataMem [0:RealWordCount-1];
 

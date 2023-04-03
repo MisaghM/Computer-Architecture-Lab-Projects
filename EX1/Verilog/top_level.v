@@ -47,7 +47,7 @@ module TopLevel(
 
     // MEM
     wire memReadOutMem, wbEnOutMem;
-    wire [31:0] aluResOutMem, reg2OutMem, memDataOutMem;
+    wire [31:0] aluResOutMem, memDataOutMem;
     wire [3:0] destOutMem;
     // MEM-WB
     wire memReadOutMemWb, wbEnOutMemWb;

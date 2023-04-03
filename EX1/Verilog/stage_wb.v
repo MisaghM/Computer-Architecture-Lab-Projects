@@ -13,7 +13,7 @@ module StageWb(
     Mux2To1 #(32) wbMux(
         .a0(aluRes),
         .a1(memData),
-        .sel(memREnIn),
+        .sel(memREn),
         .out(wbValue)
     );
 endmodule

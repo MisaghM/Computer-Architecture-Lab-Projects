@@ -17,7 +17,7 @@ module ControlUnit(
             4'b0100: aluCmd = 4'b0010; // ADD
             4'b0101: aluCmd = 4'b0011; // ADC
             4'b0010: aluCmd = 4'b0100; // SUB
-            4'b0011: aluCmd = 4'b0101; // SBC
+            4'b0110: aluCmd = 4'b0101; // SBC
             4'b0000: aluCmd = 4'b0110; // AND
             4'b1100: aluCmd = 4'b0111; // ORR
             4'b0001: aluCmd = 4'b1000; // EOR

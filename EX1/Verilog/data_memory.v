@@ -1,25 +1,21 @@
-module DataMemory #(
-    parameter WordLength = 8,
-    parameter WordCount = $rtoi($pow(2, 32)),
-    parameter BITS = $clog2(WordCount)
-)(
+module DataMemory(
     input clk, rst,
-    input [BITS-1:0] memAdr, writeData,
+    input [31:0] memAdr, writeData,
     input memRead, memWrite,
-    output reg [BITS-1:0] readData
+    output reg [31:0] readData
 );
-    localparam RealWordCount = $rtoi($pow(2, 12)); // A 4KB memory is used instead of a 4GB one
+    localparam WordCount = 4096;
 
-    reg [WordLength-1:0] dataMem [0:RealWordCount-1];
+    reg [7:0] dataMem [0:WordCount-1]; // 4KB memory
 
-    wire [BITS-1:0] adr;
-    assign adr = {memAdr[BITS-1:2], 2'b00}; // To align the address to the word boundary
+    wire [31:0] adr;
+    assign adr = {memAdr[31:2], 2'b00}; // Align address to the word boundary
 
     integer i;
     always @(posedge clk or posedge rst) begin
         if (rst)
-            for (i = 0; i < RealWordCount; i = i + 1) begin
-                dataMem[i] <= {(WordLength-1){1'b0}};
+            for (i = 0; i < WordCount; i = i + 1) begin
+                dataMem[i] <= 8'd0;
             end
         else if (memWrite)
             {dataMem[adr + 3], dataMem[adr + 2], dataMem[adr + 1], dataMem[adr]} <= writeData;

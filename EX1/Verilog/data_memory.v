@@ -4,25 +4,22 @@ module DataMemory(
     input memRead, memWrite,
     output reg [31:0] readData
 );
-    localparam WordCount = 4096;
+    localparam WordCount = 64;
 
-    reg [7:0] dataMem [0:WordCount-1]; // 4KB memory
+    reg [31:0] dataMem [0:WordCount-1]; // 256B memory
 
-    wire [31:0] adr;
-    assign adr = {memAdr[31:2], 2'b00}; // Align address to the word boundary
+    wire [31:0] dataAdr, adr;
+    assign dataAdr = memAdr - 32'd1024;
+    assign adr = {2'b00, memAdr[31:2]}; // Align address to the word boundary
 
     integer i;
-    always @(posedge clk or posedge rst) begin
-        if (rst)
-            for (i = 0; i < WordCount; i = i + 1) begin
-                dataMem[i] <= 8'd0;
-            end
-        else if (memWrite)
-            {dataMem[adr + 3], dataMem[adr + 2], dataMem[adr + 1], dataMem[adr]} <= writeData;
+    always @(posedge clk) begin
+        if (memWrite)
+            dataMem[adr] <= writeData;
     end
 
     always @(memRead or adr) begin
         if (memRead)
-            readData = {dataMem[adr + 3], dataMem[adr + 2], dataMem[adr + 1], dataMem[adr]};
+            readData = dataMem[adr];
     end
 endmodule

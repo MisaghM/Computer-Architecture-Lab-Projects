@@ -3,8 +3,7 @@ module TopLevel(
 );
     // Hazard
     wire hazard, hazardTwoSrc;
-    wire [3:0] hazardRn;
-    assign hazard = 1'b0;
+    wire [3:0] hazardRn, hazardRdm;
 
     // IF
     wire [31:0] pcOutIf, instOutIf;
@@ -59,6 +58,14 @@ module TopLevel(
     wire [31:0] wbValue;
     wire [3:0] wbDest;
 
+    HazardUnit hzrd(
+        .rn(hazardRn), .rdm(hazardRdm),
+        .twoSrc(hazardTwoSrc),
+        .destEx(destOutEx), .destMem(destOutMem),
+        .wbEnEx(wbEnOutEx), .wbEnMem(wbEnOutMem),
+        .hazard(hazard)
+    );
+
     StageIf stIf(
         .clk(clk), .rst(rst),
         .branchTaken(branchTaken), .freeze(hazard),
@@ -83,7 +90,7 @@ module TopLevel(
         .wbEn(wbEnOutId), .branch(branchOutId), .s(sOutId),
         .reg1(reg1OutId), .reg2(reg2OutId),
         .imm(immOutId), .shiftOperand(shiftOperandOutId), .imm24(imm24OutId), .dest(destOutId),
-        .hazardRn(hazardRn), .hazardTwoSrc(hazardTwoSrc)
+        .hazardRn(hazardRn), .hazardRdm(hazardRdm), .hazardTwoSrc(hazardTwoSrc)
     );
     RegsIdEx regsId(
         .clk(clk), .rst(rst),

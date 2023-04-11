@@ -20,7 +20,7 @@ module StageId(
     output signed [23:0] imm24,
     output [3:0] dest,
     // To Hazard
-    output [3:0] hazardRn,
+    output [3:0] hazardRn, hazardRdm,
     output hazardTwoSrc
 );
     assign pcOut = pcIn;
@@ -36,6 +36,7 @@ module StageId(
     wire [3:0] regfile2Inp;
     wire cond, condFinal;
     assign condFinal = ~cond | hazard;
+    assign hazardRdm = regfile2Inp;
 
     ConditionCheck cc(
         .cond(inst[31:28]),

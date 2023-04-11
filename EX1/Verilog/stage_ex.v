@@ -28,7 +28,7 @@ module StageEx(
     );
 
     wire [3:0] statusIn;
-    Register #(4) statusRegister(
+    RegisterNegEdge #(4) statusRegister(
         .clk(clk),
         .rst(rst),
         .ld(ldStatus),

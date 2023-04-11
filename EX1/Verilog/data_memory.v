@@ -10,10 +10,9 @@ module DataMemory(
 
     wire [31:0] dataAdr, adr;
     assign dataAdr = memAdr - 32'd1024;
-    assign adr = {2'b00, memAdr[31:2]}; // Align address to the word boundary
+    assign adr = {2'b00, dataAdr[31:2]}; // Align address to the word boundary
 
-    integer i;
-    always @(posedge clk) begin
+    always @(negedge clk) begin
         if (memWrite)
             dataMem[adr] <= writeData;
     end

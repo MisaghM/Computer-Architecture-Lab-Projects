@@ -13,7 +13,7 @@ module HazardUnit(
             end
         end
         if (wbEnMem) begin
-            if (rn == destMem || (twoSrc && rn == destMem)) begin
+            if (rn == destMem || (twoSrc && rdm == destMem)) begin
                 hazard = 1'b1;
             end
         end

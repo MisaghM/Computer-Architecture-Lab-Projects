@@ -12,6 +12,6 @@ module TopLevelTB();
     initial begin
         {clk, rst} = 2'b01;
         #10 rst = 1'b0;
-        #500 $stop;
+        #3000 $stop;
     end
 endmodule

@@ -22,7 +22,7 @@ module Val2Generator(
                 case (shifterOperand[6:5])
                     2'b00: val2 = valRm << shifterOperand[11:7];  // LSL
                     2'b01: val2 = valRm >> shifterOperand[11:7];  // LSR
-                    2'b10: val2 = valRm >>> shifterOperand[11:7]; // ASR
+                    2'b10: val2 = $signed(valRm) >>> shifterOperand[11:7]; // ASR
                     2'b11: begin                                  // ROR
                         val2 = valRm;
                         for (i = 0; i < shifterOperand[11:7]; i = i + 1) begin

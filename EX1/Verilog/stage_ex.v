@@ -47,7 +47,7 @@ module StageEx(
     );
 
     wire [31:0] imm24SignExt;
-    assign imm24SignExt = {{8{signedImm24[23]}}, signedImm24};
+    assign imm24SignExt = {{6{signedImm24[23]}}, signedImm24, 2'b00};
     Adder #(32) branchCalculator(
         .a(pc),
         .b(imm24SignExt),

@@ -35,6 +35,7 @@ module StageId(
     wire memReadCU, memWriteCU, wbEnCU, branchCU, sCU;
     wire [3:0] regfile2Inp;
     wire cond, condFinal;
+    wire [31:0] regRn, regRm;
     assign condFinal = ~cond | hazard;
     assign hazardRdm = regfile2Inp;
 
@@ -65,8 +66,8 @@ module StageId(
         .writeData(wbValue),
         .regWrite(wbWbEn),
         .sclr(1'b0),
-        .readData1(reg1),
-        .readData2(reg2)
+        .readData1(regRn),
+        .readData2(regRm)
     );
 
     Mux2To1 #(9) muxCtrlUnit(
@@ -81,5 +82,20 @@ module StageId(
         .a1(inst[15:12]),
         .sel(memWrite),
         .out(regfile2Inp)
+    );
+
+    // Handle X output for register file input = 4'd15
+    Mux2To1 #(32) muxRn15(
+        .a0(regRn),
+        .a1(pcIn),
+        .sel(&inst[19:16]),
+        .out(reg1)
+    );
+
+    Mux2To1 #(32) muxRm15(
+        .a0(regRm),
+        .a1(pcIn),
+        .sel(&regfile2Inp),
+        .out(reg2)
     );
 endmodule

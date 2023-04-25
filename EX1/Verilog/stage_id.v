@@ -19,8 +19,8 @@ module StageId(
     output [11:0] shiftOperand,
     output signed [23:0] imm24,
     output [3:0] dest,
+    output [3:0] src1, src2,
     // To Hazard
-    output [3:0] hazardRn, hazardRdm,
     output hazardTwoSrc
 );
     assign pcOut = pcIn;
@@ -28,7 +28,7 @@ module StageId(
     assign shiftOperand = inst[11:0];
     assign imm24 = inst[23:0];
     assign dest = inst[15:12];
-    assign hazardRn = inst[19:16];
+    assign src1 = inst[19:16];
     assign hazardTwoSrc = ~imm | memWrite;
 
     wire [3:0] aluCmdCU;
@@ -37,7 +37,7 @@ module StageId(
     wire cond, condFinal;
     wire [31:0] regRn, regRm;
     assign condFinal = ~cond | hazard;
-    assign hazardRdm = regfile2Inp;
+    assign src2 = regfile2Inp;
 
     ConditionCheck cc(
         .cond(inst[31:28]),

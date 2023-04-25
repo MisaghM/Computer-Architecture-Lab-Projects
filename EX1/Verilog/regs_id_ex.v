@@ -9,6 +9,7 @@ module RegsIdEx(
     input signed [23:0] imm24In,
     input [3:0] destIn,
     input carryIn,
+    input [3:0] src1In, src2In,
     input flush,
     output [31:0] pcOut,
     output [3:0] aluCmdOut,
@@ -18,6 +19,7 @@ module RegsIdEx(
     output [11:0] shiftOperandOut,
     output signed [23:0] imm24Out,
     output [3:0] destOut,
+    output [3:0] src1Out, src2Out,
     output carryOut
 );
     Register #(32) pcReg(

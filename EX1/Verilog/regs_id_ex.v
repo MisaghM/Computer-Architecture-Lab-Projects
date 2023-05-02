@@ -107,4 +107,16 @@ module RegsIdEx(
         .in(carryIn), .ld(1'b1), .clr(flush),
         .out(carryOut)
     );
+
+    Register #(4) src1Reg(
+        .clk(clk), .rst(rst),
+        .in(src1In), .ld(1'b1), .clr(flush),
+        .out(src1Out)
+    );
+
+    Register #(4) src2Reg(
+        .clk(clk), .rst(rst),
+        .in(src2In), .ld(1'b1), .clr(flush),
+        .out(src2Out)
+    );
 endmodule

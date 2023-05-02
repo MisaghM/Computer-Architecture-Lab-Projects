@@ -18,16 +18,16 @@ module StageEx(
     assign memWEnOut = memWEnIn;
     assign branchTakenOut = branchTakenIn;
     assign exeDest = dest;
-    assign exeValRm = valRm;
 
-    wire [31:0] aluSrc1, aluSrc2;
+    wire [31:0] aluSrc1, aluSrc2, val2;
+    assign exeValRm = aluSrc2;
 
     Val2Generator val2Generator(
         .memInst(memREnIn | memWEnIn),
         .imm(imm),
-        .valRm(valRm),
+        .valRm(aluSrc2),
         .shifterOperand(shifterOperand),
-        .val2(aluSrc2)
+        .val2(val2)
     );
 
     wire [3:0] statusIn;
@@ -42,7 +42,7 @@ module StageEx(
 
     ALU #(32) alu(
         .a(aluSrc1),
-        .b(aluSrc2),
+        .b(val2),
         .carryIn(carryIn),
         .exeCmd(exeCmd),
         .out(aluRes),
@@ -58,7 +58,7 @@ module StageEx(
     );
 
     // Forwarding Unit
-    Mux4to1 #(32) muxSrc1(
+    Mux4To1 #(32) muxSrc1(
         .a00(val1),
         .a01(valMem),
         .a10(valWb),
@@ -67,7 +67,7 @@ module StageEx(
         .out(aluSrc1)
     );
 
-    Mux4to1 #(32) muxSrc2(
+    Mux4To1 #(32) muxSrc2(
         .a00(valRm),
         .a01(valMem),
         .a10(valWb),

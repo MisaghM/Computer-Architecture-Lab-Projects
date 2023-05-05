@@ -23,7 +23,7 @@ module ForwardingUnit(
             if (wbEnMem && (destMem == src2)) begin
                 selSrc2 = 2'b01;
             end
-            if (wbEnWb && (destWb == src2)) begin
+            else if (wbEnWb && (destWb == src2)) begin
                 selSrc2 = 2'b10;
             end
         end

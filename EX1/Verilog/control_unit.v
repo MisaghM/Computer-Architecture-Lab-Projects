@@ -14,7 +14,7 @@ module ControlUnit(
         case (opcode)
             4'b1101: aluCmd = 4'b0001; // MOV
             4'b1111: aluCmd = 4'b1001; // MVN
-            4'b0100: aluCmd = 4'b0010; // ADD
+            4'b0100: aluCmd = 4'b0010; // ADD, LDR, STR
             4'b0101: aluCmd = 4'b0011; // ADC
             4'b0010: aluCmd = 4'b0100; // SUB
             4'b0110: aluCmd = 4'b0101; // SBC
@@ -23,8 +23,6 @@ module ControlUnit(
             4'b0001: aluCmd = 4'b1000; // EOR
             4'b1010: aluCmd = 4'b0100; // CMP
             4'b1000: aluCmd = 4'b0110; // TST
-            4'b0100: aluCmd = 4'b0010; // LDR
-            4'b0100: aluCmd = 4'b0010; // STR
             default: aluCmd = 4'b0001;
         endcase
 

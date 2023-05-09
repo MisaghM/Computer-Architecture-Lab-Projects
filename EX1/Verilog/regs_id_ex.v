@@ -96,12 +96,6 @@ module RegsIdEx(
         .out(destOut)
     );
 
-    Register #(1) flushReg(
-        .clk(clk), .rst(rst),
-        .in(flushIn), .ld(1'b1), .clr(flush),
-        .out(flushOut)
-    );
-
     Register #(1) carryReg(
         .clk(clk), .rst(rst),
         .in(carryIn), .ld(1'b1), .clr(flush),

@@ -6,7 +6,7 @@ module ConditionCheck(
     wire n, z, c, v;
     assign {n, z, c, v} = status;
 
-    always @(cond, status) begin
+    always @(cond, n, z, c, v) begin
         result = 1'b0;
         case (cond)
             4'b0000: result = z;             // EQ

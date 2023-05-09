@@ -1,7 +1,13 @@
 module TopLevel(
-    input clk, rst,
+    input clock, rst,
     input forwardEn
 );
+    wire clk;
+    FreqDiv freqDiv(
+        .clk(clock), .rst(rst),
+        .en(1'b1), .co(clk)
+    );
+
     // Hazard
     wire hazard, hazardTwoSrc;
 

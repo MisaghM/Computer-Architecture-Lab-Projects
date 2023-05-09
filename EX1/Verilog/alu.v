@@ -17,7 +17,7 @@ module ALU #(
     assign carryExt = {{(N-1){1'b0}}, carryIn};
     assign nCarryExt = {{(N-1){1'b0}}, ~carryIn};
 
-    always @(exeCmd or a or b or carryIn) begin
+    always @(exeCmd or a or b or carryExt or nCarryExt) begin
         out = {N{1'b0}};
         c = 1'b0;
 

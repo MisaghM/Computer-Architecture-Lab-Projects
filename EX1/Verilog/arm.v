@@ -1,4 +1,4 @@
-module ARM(
+module arm(
     // Clock Input
     input CLOCK_27,          // 27 MHz
     input CLOCK_50,          // 50 MHz
@@ -127,7 +127,7 @@ module ARM(
     inout [35:0] GPIO_1      // GPIO Connection 1
 );
     TopLevel toplevel(
-        .clk(CLOCK_50),
+        .clock(CLOCK_50),
         .rst(SW[0]),
         .forwardEn(SW[1])
     );

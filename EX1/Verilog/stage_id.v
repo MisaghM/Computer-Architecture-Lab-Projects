@@ -29,13 +29,13 @@ module StageId(
     assign imm24 = inst[23:0];
     assign dest = inst[15:12];
     assign src1 = inst[19:16];
-    assign hazardTwoSrc = ~imm | memWrite;
 
     wire [3:0] aluCmdCU;
     wire memReadCU, memWriteCU, wbEnCU, branchCU, sCU;
     wire [3:0] regfile2Inp;
     wire cond, condFinal;
     wire [31:0] regRn, regRm;
+    assign hazardTwoSrc = ~imm | memWriteCU;
     assign condFinal = ~cond | hazard;
     assign src2 = regfile2Inp;
 
@@ -80,7 +80,7 @@ module StageId(
     Mux2To1 #(4) muxRegfile(
         .a0(inst[3:0]),
         .a1(inst[15:12]),
-        .sel(memWrite),
+        .sel(memWriteCU),
         .out(regfile2Inp)
     );
 

@@ -12,8 +12,14 @@ module DataMemory(
     assign dataAdr = memAdr - 32'd1024;
     assign adr = {2'b00, dataAdr[31:2]}; // Align address to the word boundary
 
-    always @(negedge clk) begin
-        if (memWrite)
+    integer i;
+
+    always @(negedge clk, posedge rst) begin
+        if (rst)
+            for (i = 0; i < WordCount; i = i + 1) begin
+                dataMem[i] <= 32'd0;
+            end
+        else if (memWrite)
             dataMem[adr] <= writeData;
     end
 

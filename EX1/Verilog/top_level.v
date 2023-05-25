@@ -1,12 +1,20 @@
 module TopLevel(
     input clock, rst,
-    input forwardEn
+    input forwardEn,
+    inout [15:0] SRAM_DQ,
+    output [17:0] SRAM_ADDR,
+    output SRAM_UB_N,
+    output SRAM_LB_N,
+    output SRAM_WE_N,
+    output SRAM_CE_N,
+    output SRAM_OE_N
 );
     wire clk;
     FreqDiv freqDiv(
         .clk(clock), .rst(rst),
-        .en(1'b1), .co(clk)
+        .en(1'b1), .co()
     );
+    assign clk = clock;
 
     // Hazard
     wire hazard, hazardTwoSrc;
@@ -57,6 +65,7 @@ module TopLevel(
 
     // MEM
     wire memReadOutMem, wbEnOutMem;
+    wire ramFreeze;
     wire [31:0] aluResOutMem, memDataOutMem;
     wire [3:0] destOutMem;
     // MEM-WB
@@ -88,13 +97,13 @@ module TopLevel(
 
     StageIf stIf(
         .clk(clk), .rst(rst),
-        .branchTaken(branchTaken), .freeze(hazard),
+        .branchTaken(branchTaken), .freeze(hazard | ramFreeze),
         .branchAddr(branchAddr),
         .pc(pcOutIf), .instruction(instOutIf)
     );
     RegsIfId regsIf(
         .clk(clk), .rst(rst),
-        .freeze(hazard), .flush(branchTaken),
+        .freeze(hazard | ramFreeze), .flush(branchTaken),
         .pcIn(pcOutIf), .instructionIn(instOutIf),
         .pcOut(pcOutIfId), .instructionOut(instOutIfId)
     );
@@ -120,7 +129,7 @@ module TopLevel(
         .reg1In(reg1OutId), .reg2In(reg2OutId),
         .immIn(immOutId), .shiftOperandIn(shiftOperandOutId), .imm24In(imm24OutId), .destIn(destOutId),
         .carryIn(carryIn), .src1In(src1OutId), .src2In(src2OutId),
-        .flush(branchTaken),
+        .flush(branchTaken), .freeze(ramFreeze),
         .pcOut(pcOutIdEx),
         .aluCmdOut(aluCmdOutIdEx), .memReadOut(memReadOutIdEx), .memWriteOut(memWriteOutIdEx),
         .wbEnOut(wbEnOutIdEx), .branchOut(branchOutIdEx), .sOut(sOutIdEx),
@@ -145,6 +154,7 @@ module TopLevel(
         .clk(clk), .rst(rst),
         .wbEnIn(wbEnOutEx), .memREnIn(memReadOutEx), .memWEnIn(memWriteOutEx),
         .aluResIn(aluResOutEx), .valRmIn(reg2OutEx), .destIn(destOutEx),
+        .freeze(ramFreeze),
         .wbEnOut(wbEnOutExMem), .memREnOut(memReadOutExMem), .memWEnOut(memWriteOutExMem),
         .aluResOut(aluResOutExMem), .valRmOut(reg2OutExMem), .destOut(destOutExMem)
     );
@@ -154,12 +164,21 @@ module TopLevel(
         .wbEnIn(wbEnOutExMem), .memREnIn(memReadOutExMem), .memWEnIn(memWriteOutExMem),
         .aluResIn(aluResOutExMem), .valRm(reg2OutExMem), .destIn(destOutExMem),
         .wbEnOut(wbEnOutMem), .memREnOut(memReadOutMem),
-        .aluResOut(aluResOutMem), .memOut(memDataOutMem), .destOut(destOutMem)
+        .aluResOut(aluResOutMem), .memOut(memDataOutMem), .destOut(destOutMem),
+        .freeze(ramFreeze),
+        .SRAM_ADDR(SRAM_ADDR),
+        .SRAM_DQ(SRAM_DQ),
+        .SRAM_UB_N(SRAM_UB_N),
+        .SRAM_LB_N(SRAM_LB_N),
+        .SRAM_WE_N(SRAM_WE_N),
+        .SRAM_CE_N(SRAM_CE_N),
+        .SRAM_OE_N(SRAM_DE_N)
     );
     RegsMemWb regsMem(
         .clk(clk), .rst(rst),
         .wbEnIn(wbEnOutMem), .memREnIn(memReadOutMem),
         .aluResIn(aluResOutMem), .memDataIn(memDataOutMem), .destIn(destOutMem),
+        .freeze(ramFreeze),
         .wbEnOut(wbEnOutMemWb), .memREnOut(memReadOutMemWb),
         .aluResOut(aluResOutMemWb), .memDataOut(memDataOutMemWb), .destOut(destOutMemWb)
     );

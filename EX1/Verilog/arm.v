@@ -129,6 +129,13 @@ module arm(
     TopLevel toplevel(
         .clock(CLOCK_50),
         .rst(SW[0]),
-        .forwardEn(SW[1])
+        .forwardEn(SW[1]),
+        .SRAM_ADDR(SRAM_ADDR),
+        .SRAM_DQ(SRAM_DQ),
+        .SRAM_UB_N(SRAM_UB_N),
+        .SRAM_LB_N(SRAM_LB_N),
+        .SRAM_WE_N(SRAM_WE_N),
+        .SRAM_CE_N(SRAM_CE_N),
+        .SRAM_OE_N(SRAM_DE_N)
     );
 endmodule

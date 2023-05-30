@@ -3,7 +3,7 @@ module SramController(
     input wrEn, rdEn,
     input [31:0] address,
     input [31:0] writeData,
-    output reg [31:0] readData,
+    output reg [63:0] readData,
     output reg ready,            // to freeze other stages
 
     inout [15:0] SRAM_DQ,        // SRAM Data bus 16 bits
@@ -19,23 +19,25 @@ module SramController(
     wire [31:0] memAddr;
     assign memAddr = address - 32'd1024;
 
-    wire [17:0] sramLowAddr, sramHighAddr;
-    assign sramLowAddr = memAddr[18:1];
+    wire [17:0] sramLowAddr, sramHighAddr, sramUpLowAddess, sramUpHighAddess;
+    assign sramLowAddr = {memAddr[18:2], 1'b0};
     assign sramHighAddr = sramLowAddr + 18'd1;
+    assign sramUpLowAddess = sramLowAddr + 18'd2;
+    assign sramUpHighAddess = sramLowAddr + 18'd3;
 
     reg [15:0] dq;
     assign SRAM_DQ = wrEn ? dq : 16'bz;
 
-    localparam Idle = 3'd0, DataLow = 3'd1, DataHigh = 3'd2, Finish = 3'd3, NoOp = 3'd4, Done = 3'd5;
+    localparam Idle = 3'd0, DataLow = 3'd1, DataHigh = 3'd2, DataUpLow = 3'd3, DataUpHigh = 3'd4, Done = 3'd5;
     reg [2:0] ps, ns;
 
     always @(ps or wrEn or rdEn) begin
         case (ps)
             Idle: ns = (wrEn == 1'b1 || rdEn == 1'b1) ? DataLow : Idle;
             DataLow: ns = DataHigh;
-            DataHigh: ns = Finish;
-            Finish: ns = NoOp;
-            NoOp: ns = Done;
+            DataHigh: ns = DataUpLow;
+            DataUpLow: ns = DataUpHigh;
+            DataUpHigh: ns = Done;
             Done: ns = Idle;
         endcase
     end
@@ -61,10 +63,18 @@ module SramController(
                 if (rdEn)
                     readData[31:16] <= SRAM_DQ;
             end
-            Finish: begin
+            DataUpLow: begin
+                SRAM_ADDR = sramUpLowAddess;
                 SRAM_WE_N = 1'b1;
+                if (rdEn)
+                    readData[47:32] <= SRAM_DQ;
             end
-            NoOp:;
+            DataUpHigh: begin
+                SRAM_ADDR = sramUpHighAddess;
+                SRAM_WE_N = 1'b1;
+                if (rdEn)
+                    readData[63:48] <= SRAM_DQ;
+            end
             Done: ready = 1'b1;
         endcase
     end

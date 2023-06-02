@@ -20,10 +20,14 @@ module SramController(
     assign memAddr = address - 32'd1024;
 
     wire [17:0] sramLowAddr, sramHighAddr, sramUpLowAddess, sramUpHighAddess;
-    assign sramLowAddr = {memAddr[18:2], 1'b0};
+    assign sramLowAddr = {memAddr[18:3], 2'd0};
     assign sramHighAddr = sramLowAddr + 18'd1;
     assign sramUpLowAddess = sramLowAddr + 18'd2;
     assign sramUpHighAddess = sramLowAddr + 18'd3;
+
+    wire [17:0] sramLowAddrWrite, sramHighAddrWrite;
+    assign sramLowAddrWrite = {memAddr[18:2], 1'b0};
+    assign sramHighAddrWrite = sramLowAddrWrite + 18'd1;
 
     reg [15:0] dq;
     assign SRAM_DQ = wrEn ? dq : 16'bz;
@@ -50,30 +54,40 @@ module SramController(
         case (ps)
             Idle: ready = ~(wrEn | rdEn);
             DataLow: begin
-                SRAM_ADDR = sramLowAddr;
                 SRAM_WE_N = ~wrEn;
-                dq = writeData[15:0];
-                if (rdEn)
+                if (rdEn) begin
+                    SRAM_ADDR = sramLowAddr;
                     readData[15:0] <= SRAM_DQ;
+                end
+                else if (wrEn) begin
+                    SRAM_ADDR = sramLowAddrWrite;
+                    dq = writeData[15:0];
+                end
             end
             DataHigh: begin
-                SRAM_ADDR = sramHighAddr;
                 SRAM_WE_N = ~wrEn;
-                dq = writeData[31:16];
-                if (rdEn)
+                if (rdEn) begin
+                    SRAM_ADDR = sramHighAddr;
                     readData[31:16] <= SRAM_DQ;
+                end
+                else if (wrEn) begin
+                    SRAM_ADDR = sramHighAddrWrite;
+                    dq = writeData[31:16];
+                end
             end
             DataUpLow: begin
-                SRAM_ADDR = sramUpLowAddess;
                 SRAM_WE_N = 1'b1;
-                if (rdEn)
+                if (rdEn) begin
+                    SRAM_ADDR = sramUpLowAddess;
                     readData[47:32] <= SRAM_DQ;
+                end
             end
             DataUpHigh: begin
-                SRAM_ADDR = sramUpHighAddess;
                 SRAM_WE_N = 1'b1;
-                if (rdEn)
+                if (rdEn) begin
+                    SRAM_ADDR = sramUpHighAddess;
                     readData[63:48] <= SRAM_DQ;
+                end
             end
             Done: ready = 1'b1;
         endcase

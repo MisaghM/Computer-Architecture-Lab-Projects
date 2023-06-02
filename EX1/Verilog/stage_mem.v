@@ -22,13 +22,17 @@ module StageMem(
     wire ready;
     assign freeze = ~ready;
 
+    wire sramReady;
+    wire sramMemWEnIn, sramMemREnIn;
+    wire [63:0] sramReadData;
+
     SramController sc(
         .clk(clk), .rst(rst),
-        .wrEn(memWEnIn), .rdEn(memREnIn),
+        .wrEn(sramMemWEnIn), .rdEn(sramMemREnIn),
         .address(aluResIn),
         .writeData(valRm),
-        .readData(memOut),
-        .ready(ready),
+        .readData(sramReadData),
+        .ready(sramReady),
         .SRAM_DQ(SRAM_DQ),
         .SRAM_ADDR(SRAM_ADDR),
         .SRAM_UB_N(SRAM_UB_N),
@@ -36,6 +40,18 @@ module StageMem(
         .SRAM_WE_N(SRAM_WE_N),
         .SRAM_CE_N(SRAM_CE_N),
         .SRAM_OE_N(SRAM_OE_N)
+    );
+
+    CacheController cc(
+        .clk(clk), .rst(rst),
+        .wrEn(memWEnIn), .rdEn(memREnIn),
+        .address(aluResIn),
+        .writeData(valRm),
+        .readData(memOut),
+        .ready(ready),
+        .sramReady(sramReady),
+        .sramReadData(sramReadData),
+        .sramWrEn(sramMemWEnIn), .sramRdEn(sramMemREnIn)
     );
 
     // DataMemory mem(
